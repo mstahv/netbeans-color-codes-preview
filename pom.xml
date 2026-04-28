@@ -28,6 +28,7 @@
     </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
         <netbeans.api.version>RELEASE110</netbeans.api.version>
         <!-- deploy: mvn -Dgpg.skip=false deploy -->
         <gpg.skip>true</gpg.skip>
@@ -48,7 +49,7 @@
             <plugin>
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <version>4.4</version>
+                <version>14.4</version>
                 <extensions>true</extensions>
                 <configuration>
                     <codeNameBase>com.junichi11.netbeans.modules.color.codes.preview</codeNameBase>
@@ -65,16 +66,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <!-- JDK 23+ refuses to run annotation processors implicitly; keep
+                         @NbBundle.Messages and @ServiceProvider processors enabled. -->
+                    <proc>full</proc>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -84,12 +86,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.15</version>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- NetBeans' ProxyURLStreamHandlerFactory reflectively sets the
+                         java.net.URL#handler field; required from JDK 17+. -->
+                    <argLine>--add-opens=java.base/java.net=ALL-UNNAMED</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

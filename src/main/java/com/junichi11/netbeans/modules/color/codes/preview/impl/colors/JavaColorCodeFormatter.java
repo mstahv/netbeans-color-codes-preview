@@ -18,6 +18,7 @@ package com.junichi11.netbeans.modules.color.codes.preview.impl.colors;
 import com.junichi11.netbeans.modules.color.codes.preview.impl.utils.JavaColorType;
 import com.junichi11.netbeans.modules.color.codes.preview.spi.ColorCodeFormatter;
 import java.awt.Color;
+import java.util.Locale;
 import org.netbeans.api.annotations.common.CheckForNull;
 
 /**
@@ -87,11 +88,13 @@ public final class JavaColorCodeFormatter implements ColorCodeFormatter {
     }
 
     private String asRGBFloatColorValue(Color color) {
-        return String.format(FLOAT_R_G_B_FORMAT, getPackageName(), color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f);
+        // Output is Java source code, so the decimal separator must always be '.'
+        // — pin to Locale.ROOT regardless of the user's system locale.
+        return String.format(Locale.ROOT, FLOAT_R_G_B_FORMAT, getPackageName(), color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f);
     }
 
     private String asRGBAFloatColorValue(Color color) {
-        return String.format(FLOAT_R_G_B_A_FORMAT, getPackageName(), color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
+        return String.format(Locale.ROOT, FLOAT_R_G_B_A_FORMAT, getPackageName(), color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
     }
 
     private String asRGBAIntColorValue(Color color) {
